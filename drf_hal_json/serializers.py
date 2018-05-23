@@ -88,12 +88,14 @@ class HalModelSerializer(HyperlinkedModelSerializer):
         for field_name in self.embedded_field_names:
             # if a related resource is embedded, it should still
             # get a link in the parent object
-            if type(ret[field_name]) == list:
-                embed_self = list(filter(lambda x: x is not None, [self._get_url(x) for x in ret[field_name] if x]))
-            else:
-                embed_self = self._get_url(ret[field_name])
-            if embed_self:
-                resp[LINKS_FIELD_NAME][field_name] = embed_self
+	    # the if/else case produces duplicates _links fields,
+	    # if both field types match // nicer solution must be written
+            #if type(ret[field_name]) == list:
+            #    embed_self = list(filter(lambda x: x is not None, [self._get_url(x) for x in ret[field_name] if x]))
+            #else:
+            #    embed_self = self._get_url(ret[field_name])
+            #if embed_self:
+            #    resp[LINKS_FIELD_NAME][field_name] = embed_self
             resp[EMBEDDED_FIELD_NAME][field_name] = ret.pop(field_name)
 
         resp = dict(resp, **ret)
